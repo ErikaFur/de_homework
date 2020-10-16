@@ -17,15 +17,15 @@ class Example(QMainWindow):
         self.x_init = 1
         self.y_init = -2
         self.x_end = 10
-        self.h = 1
-        self.H = 10
-        self.step = 0.1
+        self.n = 9
+        self.N = 30
+        self.step = 1
         self.check = "1111"
 
         self.initUI()
         self.setCentralWidget(self.centralWidget)
         self.move(300, 200)
-        self.setGeometry(500, 400, 500, 600)
+        self.setGeometry(500, 400, 700, 600)
         self.setWindowTitle('DE')
         self.show()
 
@@ -54,23 +54,48 @@ class Example(QMainWindow):
         self.a_param = self.textboxes(130, 412)
         self.y_param = self.textboxes(130, 442)
         self.b_param = self.textboxes(130, 472)
-        self.h_param = self.textboxes(130, 502)
-        self.H_param = self.textboxes(130, 532)
+        self.n_param = self.textboxes(130, 502)
+        self.N_param = self.textboxes(130, 532)
         self.step_param = self.textboxes(130, 562)
         self.b_exe = self.button_execute()
         self.b_exit = self.button_exit()
-        self.tab1.layout.addWidget(self.EulerCheckbox)
-        self.tab1.layout.addWidget(self.IEulerCheckbox)
-        self.tab1.layout.addWidget(self.RKCheckbox)
-        self.tab1.layout.addWidget(self.ExactCheckbox)
-        self.tab1.layout.addWidget(self.a_param)
-        self.tab1.layout.addWidget(self.y_param)
-        self.tab1.layout.addWidget(self.b_param)
-        self.tab1.layout.addWidget(self.h_param)
-        self.tab1.layout.addWidget(self.H_param)
-        self.tab1.layout.addWidget(self.step_param)
-        self.tab1.layout.addWidget(self.b_exe)
-        self.tab1.layout.addWidget(self.b_exit)
+
+        self.tab1_1 = QWidget()
+        self.tab1_1.layout = QVBoxLayout(self)
+        self.tab1_1.layout.addWidget(self.EulerCheckbox)
+        self.tab1_1.layout.addWidget(self.IEulerCheckbox)
+        self.tab1_1.layout.addWidget(self.RKCheckbox)
+        self.tab1_1.layout.addWidget(self.ExactCheckbox)
+        self.tab1.layout.addLayout(self.tab1_1.layout)
+
+        self.tab1_2 = QWidget()
+        self.tab1_2.layout = QHBoxLayout(self)
+        self.tab1_2_1 = QWidget()
+        self.tab1_2_1.layout = QVBoxLayout(self)
+        self.tab1_2_1.layout.addWidget(QLabel("x init (a) =",self))
+        self.tab1_2_1.layout.addWidget(QLabel("y init =",self))
+        self.tab1_2_1.layout.addWidget(QLabel("x end (b) =",self))
+        self.tab1_2_1.layout.addWidget(QLabel("n =",self))
+        self.tab1_2_1.layout.addWidget(QLabel("N =",self))
+        self.tab1_2_1.layout.addWidget(QLabel("step =",self))
+        self.tab1_2_2 = QWidget()
+        self.tab1_2_2.layout = QVBoxLayout(self)
+        self.tab1_2_2.layout.addWidget(self.a_param)
+        self.tab1_2_2.layout.addWidget(self.y_param)
+        self.tab1_2_2.layout.addWidget(self.b_param)
+        self.tab1_2_2.layout.addWidget(self.n_param)
+        self.tab1_2_2.layout.addWidget(self.N_param)
+        self.tab1_2_2.layout.addWidget(self.step_param)
+        self.tab1_2.layout.addLayout(self.tab1_2_1.layout)
+        self.tab1_2.layout.addLayout(self.tab1_2_2.layout)
+        self.tab1.layout.addLayout(self.tab1_2.layout)
+
+        self.tab1_3 = QWidget()
+        self.tab1_3.layout = QVBoxLayout(self)
+        self.tab1_3.layout.addWidget(self.b_exe)
+        self.tab1_3.layout.addWidget(self.b_exit)
+        self.tab1.layout.addLayout(self.tab1_3.layout)
+
 
         self.tab2.layout = QVBoxLayout(self)
         self.label2 = QLabel(self)
@@ -108,7 +133,7 @@ class Example(QMainWindow):
         self.tab4.setLayout(self.tab4.layout)
         self.tab5.setLayout(self.tab5.layout)
         self.tab6.setLayout(self.tab6.layout)
-        print(self.label6)
+        #print(self.label6)
 
     def button_exit(self):
         btn_exit = QPushButton('Exit', self)
@@ -150,28 +175,20 @@ class Example(QMainWindow):
         self.x_init = self.x_init if self.a_param.text() == "" else self.a_param.text()
         self.y_init = self.y_init if self.y_param.text() == "" else self.y_param.text()
         self.x_end = self.x_end if self.b_param.text() == "" else self.b_param.text()
-        self.h = self.h if self.h_param.text() == "" else self.h_param.text()
-        self.H = self.H if self.H_param.text() == "" else self.H_param.text()
+        self.n = self.n if self.n_param.text() == "" else self.n_param.text()
+        self.N = self.N if self.N_param.text() == "" else self.N_param.text()
         self.step = self.step if self.step_param.text() == "" else self.step_param.text()
-        de.Grid(x_init = double(self.x_init), y_init=double(self.y_init),
-                X= double(self.x_end), h = double(self.h),
-                check=self.check).plot_functions()
+        output = de.Grid(x_init = double(self.x_init), y_init=double(self.y_init),
+                X= double(self.x_end), n = double(self.n),check=self.check)
+        output.plot_functions()
 
-        de.Grid(x_init=double(self.x_init), y_init=double(self.y_init),
-                X=double(self.x_end), h=double(self.h),
-                check=self.check).plot_GTE()
+        output.plot_GTE()
 
-        de.Grid(x_init=double(self.x_init), y_init=double(self.y_init),
-                X=double(self.x_end), h=double(self.h),
-                check=self.check).plot_LTE()
+        output.plot_LTE()
 
-        de.Grid(x_init=double(self.x_init), y_init=double(self.y_init),
-                X=double(self.x_end), h=double(self.h),
-                check=self.check).plot_max_GTE()
+        output.plot_max_GTE(N=self.N,step=self.step)
 
-        de.Grid(x_init=double(self.x_init), y_init=double(self.y_init),
-                X=double(self.x_end), h=double(self.h),
-                check=self.check).plot_max_LTE()
+        output.plot_max_LTE(N=self.N,step=self.step)
 
         self.tab2.layout.removeWidget(self.label2)
         self.label2.setPixmap(QPixmap('plot_functions.png'))
