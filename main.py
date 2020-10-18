@@ -1,8 +1,8 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QComboBox, QInputDialog, QWidget,
-                             QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-                             QLabel, QCheckBox, QMenu, QMenuBar, QMainWindow, QPushButton, QSpinBox, QTextEdit,
-                             QVBoxLayout, QLineEdit, QTabWidget,QMainWindow, QApplication, QPushButton, QWidget, QAction, QTabWidget,QVBoxLayout)
+from PyQt5.QtWidgets import (QHBoxLayout,
+                             QLabel, QCheckBox, QLineEdit,
+                             QMainWindow, QApplication, QPushButton,
+                             QWidget, QTabWidget,QVBoxLayout)
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import QCoreApplication, Qt, QRect, pyqtSlot
 from numpy import double
@@ -49,7 +49,7 @@ class Example(QMainWindow):
         self.tab1.layout = QVBoxLayout(self)
         self.EulerCheckbox = self.checkboxes("Euler method", 0, 400, 410)
         self.IEulerCheckbox = self.checkboxes("Improved Euler\n method", 1, 400, 440)
-        self.RKCheckbox = self.checkboxes("Runte-Kutta", 2, 400, 470)
+        self.RKCheckbox = self.checkboxes("Runge-Kutta", 2, 400, 470)
         self.ExactCheckbox = self.checkboxes("Exact", 3, 400, 500)
         self.a_param = self.textboxes(130, 412)
         self.y_param = self.textboxes(130, 442)
@@ -186,9 +186,9 @@ class Example(QMainWindow):
 
         output.plot_LTE()
 
-        output.plot_max_GTE(N=self.N,step=self.step)
+        output.plot_max_GTE(N=double(self.N), step=double(self.step))
 
-        output.plot_max_LTE(N=self.N,step=self.step)
+        output.plot_max_LTE(N=double(self.N), step=double(self.step))
 
         self.tab2.layout.removeWidget(self.label2)
         self.label2.setPixmap(QPixmap('plot_functions.png'))
